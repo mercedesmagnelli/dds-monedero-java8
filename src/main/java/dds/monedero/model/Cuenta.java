@@ -13,7 +13,8 @@ import java.util.List;
 public class Cuenta {
 
   private BigDecimal saldo = new BigDecimal(0);
-  private List<Movimiento> movimientos = new ArrayList<>();
+  private List<Extraccion> extracciones = new ArrayList<>();
+  private List<Deposito> depositos = new ArrayList<>();
 
   public Cuenta() {
     saldo = new BigDecimal(0);
@@ -28,31 +29,48 @@ public class Cuenta {
   }
 
   public void poner(BigDecimal cuanto) {
-    if (cuanto.doubleValue() <= 0) {
-      throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
-    }
-
-    if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
-      throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
-    }
-
-    new Movimiento(LocalDate.now(), cuanto).agregateA(this);
+    this.controlMontoNegativo(cuanto);
+    this.controlLimiteDepositosDiarios(3);
+   this.agregarDeposito(new Deposito(LocalDate.now(), cuanto));
   }
 
   public void sacar(BigDecimal cuanto) {
-    if (cuanto.doubleValue()<= 0) {
-      throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
-    }
-    if (getSaldo().doubleValue() - cuanto.doubleValue() < 0) {
-      throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
-    }
+    this.controlMontoNegativo(cuanto);
+    this.controlSaldoSuficiente(cuanto);
+    this.controlLimiteCantidadExtraidaDiaria(cuanto);
+    this.agregarExtraccion(new Extraccion(LocalDate.now(), cuanto));
+  }
+
+  public void agregarExtraccion(Extraccion unaExtraccion) {
+    extracciones.add(unaExtraccion);
+  }
+  public void agregarDeposito(Deposito unDeposito) {
+    depositos.add(unDeposito);
+  }
+
+  private void controlLimiteCantidadExtraidaDiaria(BigDecimal cuanto) {
     double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
     double limite = 1000 - montoExtraidoHoy;
     if (cuanto.doubleValue() > limite) {
       throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
-          + " diarios, límite: " + limite);
+        + " diarios, límite: " + limite);
     }
-    new Movimiento(LocalDate.now(), cuanto).agregateA(this);
+  }
+
+  private void controlSaldoSuficiente(BigDecimal cuanto) {
+    if (getSaldo().doubleValue() - cuanto.doubleValue() < 0) {
+      throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
+    }
+  }
+  private void controlLimiteDepositosDiarios(int cantidad) {
+    if (depositos.size() >= cantidad ) {
+      throw new MaximaCantidadDepositosException("Ya excedio los " + cantidad + " depositos diarios");
+    }
+  }
+  public void controlMontoNegativo(BigDecimal cuanto) {
+    if (cuanto.doubleValue() <= 0) {
+      throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
+    }
   }
 
   public void agregarMovimiento(LocalDate fecha, BigDecimal cuanto) {
@@ -67,9 +85,12 @@ public class Cuenta {
         .sum();
   }
 
-  public List<Movimiento> getMovimientos() {
-    return movimientos;
-  }
+
+
+
+
+
+  //public List<Movimiento> getMovimientos() {return movimientos;}
 
   public BigDecimal getSaldo() {
     return saldo;
