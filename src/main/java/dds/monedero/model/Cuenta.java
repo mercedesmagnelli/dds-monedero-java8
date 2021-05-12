@@ -23,11 +23,7 @@ public class Cuenta {
   public Cuenta(BigDecimal montoInicial) {
     saldo = montoInicial;
   }
-
-  public void setMovimientos(List<Movimiento> movimientos) {
-    this.movimientos = movimientos;
-  }
-
+   
   public void poner(BigDecimal cuanto) {
     this.controlMontoNegativo(cuanto);
     this.controlLimiteDepositosDiarios(3);

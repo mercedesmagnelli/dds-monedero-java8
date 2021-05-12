@@ -34,7 +34,7 @@ public class Movimiento {
 
 
 
-  /*public double calcularValor(Cuenta cuenta) {
+  public double calcularValor(Cuenta cuenta) {
     if (esDeposito) {
       return cuenta.getSaldo() + getMonto();
     } else {
@@ -43,5 +43,5 @@ public class Movimiento {
   }
 
 }
-   */
+
 }
