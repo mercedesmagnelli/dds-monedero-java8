@@ -23,7 +23,7 @@ public class Cuenta {
   public Cuenta(BigDecimal montoInicial) {
     saldo = montoInicial;
   }
-   
+
   public void poner(BigDecimal cuanto) {
     this.controlMontoNegativo(cuanto);
     this.controlLimiteDepositosDiarios(3);
@@ -48,8 +48,7 @@ public class Cuenta {
     double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
     double limite = 1000 - montoExtraidoHoy;
     if (cuanto.doubleValue() > limite) {
-      throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
-        + " diarios, límite: " + limite);
+      throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000 + " diarios, límite: " + limite);
     }
   }
 
@@ -69,10 +68,6 @@ public class Cuenta {
     }
   }
 
-  public void agregarMovimiento(LocalDate fecha, BigDecimal cuanto) {
-    Movimiento movimiento = new Movimiento(fecha, cuanto);
-    movimientos.add(movimiento);
-  }
 
   public double getMontoExtraidoA(LocalDate fecha) {
     return getMovimientos().stream()
@@ -80,13 +75,7 @@ public class Cuenta {
         .mapToDouble(Movimiento::getMonto)
         .sum();
   }
-
-
-
-
-
-
-  //public List<Movimiento> getMovimientos() {return movimientos;}
+  
 
   public BigDecimal getSaldo() {
     return saldo;
