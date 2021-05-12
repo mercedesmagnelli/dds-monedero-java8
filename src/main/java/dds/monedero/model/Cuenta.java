@@ -68,14 +68,12 @@ public class Cuenta {
     }
   }
 
-
   public double getMontoExtraidoA(LocalDate fecha) {
-    return getMovimientos().stream()
-        .filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha))
-        .mapToDouble(Movimiento::getMonto)
+    return extracciones.stream()
+        .filter(movimiento -> movimiento.getFecha().equals(fecha))
+        .mapToDouble(mov -> mov.getMonto().doubleValue())
         .sum();
   }
-  
 
   public BigDecimal getSaldo() {
     return saldo;
