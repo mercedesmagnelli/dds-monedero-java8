@@ -1,5 +1,6 @@
 package dds.monedero.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Movimiento {
@@ -7,14 +8,14 @@ public class Movimiento {
   private LocalDate fecha;
   //En ningún lenguaje de programación usen jamás doubles para modelar dinero en el mundo real
   //siempre usen numeros de precision arbitraria, como BigDecimal en Java y similares
-  private double monto;
+  private BigDecimal monto;
 
-  public Movimiento(LocalDate fecha, double monto) {
+  public Movimiento(LocalDate fecha, BigDecimal monto) {
     this.fecha = fecha;
     this.monto = monto;
   }
 
-  public double getMonto() {
+  public BigDecimal getMonto() {
     return monto;
   }
 
