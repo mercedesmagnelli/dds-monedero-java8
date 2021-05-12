@@ -8,14 +8,14 @@ public class Movimiento {
   private LocalDate fecha;
   //En ningún lenguaje de programación usen jamás doubles para modelar dinero en el mundo real
   //siempre usen numeros de precision arbitraria, como BigDecimal en Java y similares
-  private BigDecimal monto;
+  private double monto;
 
-  public Movimiento(LocalDate fecha, BigDecimal monto) {
+  public Movimiento(LocalDate fecha, double monto) {
     this.fecha = fecha;
     this.monto = monto;
   }
 
-  public BigDecimal getMonto() {
+  public double getMonto() {
     return monto;
   }
 
@@ -31,17 +31,6 @@ public class Movimiento {
     return this.fecha.equals(fecha);
   }
 
-
-
-
-  public double calcularValor(Cuenta cuenta) {
-    if (esDeposito) {
-      return cuenta.getSaldo() + getMonto();
-    } else {
-      return cuenta.getSaldo() - getMonto();
-    }
-  }
-
 }
 
-}
+
