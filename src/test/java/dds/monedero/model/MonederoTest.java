@@ -41,9 +41,16 @@ public class MonederoTest {
           cuenta.poner(200);
     });
   }
+  @Test
+  void seActualizaElMontoAnteUnaExtraccion() {
+    cuenta.poner(1000);
+    cuenta.sacar(200);
+    assertEquals(800, cuenta.getSaldo());
+
+  }
 
   @Test
-  public void ExtraerMasDeLoPermitido() {
+  public void NoSePuedeExtaerMasDeMil() {
     assertThrows(MaximoExtraccionDiarioException.class, () -> {
       cuenta.setSaldo(5000);
       cuenta.sacar(1001);
@@ -53,8 +60,8 @@ public class MonederoTest {
   @Test
   void ExtraerMasQueElSaldo() {
     assertThrows(SaldoMenorException.class, () -> {
-          cuenta.setSaldo(900);
-          cuenta.sacar(1001);
+          cuenta.setSaldo(90);
+          cuenta.sacar(100);
     });
   }
 

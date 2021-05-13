@@ -17,22 +17,31 @@ public class Cuenta {
 
 
   public Cuenta(double montoInicial) {
-    saldo = montoInicial;
+    this.saldo = montoInicial;
   }
 
   public void poner(double cuanto) {
-    this.controlMontoNegativo(cuanto);
-    this.controlLimiteDepositosDiarios(3);
-   this.agregarDeposito(new Deposito(LocalDate.now(), cuanto));
-   saldo += cuanto;
+    this.controlParaDeposito(cuanto);
+    this.agregarDeposito(new Deposito(LocalDate.now(), cuanto));
+    saldo += cuanto;
   }
 
-  public void sacar(double cuanto) {
+  public void controlParaDeposito(double cuanto) {
     this.controlMontoNegativo(cuanto);
-    this.controlSaldoSuficiente(cuanto);
-    this.controlLimiteCantidadExtraidaDiaria(1000);
+    this.controlLimiteDepositosDiarios(3);
+  }
+
+
+  public void sacar(double cuanto) {
+   this.controlesParaExtraccion(cuanto);
     this.agregarExtraccion(new Extraccion(LocalDate.now(), cuanto));
     saldo -= cuanto;
+  }
+  public void controlesParaExtraccion(double cuanto) {
+    this.controlMontoNegativo(cuanto);
+    this.controlLimiteCantidadExtraidaDiaria(cuanto);
+    this.controlSaldoSuficiente(cuanto);
+
   }
 
   public void agregarExtraccion(Extraccion unaExtraccion) {
@@ -51,7 +60,7 @@ public class Cuenta {
   }
 
   private void controlSaldoSuficiente(double cuanto) {
-    if (getSaldo() - cuanto < 0) {
+    if (cuanto > getSaldo()) {
       throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
     }
   }
@@ -78,7 +87,7 @@ public class Cuenta {
   }
 
   public void setSaldo(double monto) {
-    this.saldo = saldo;
+    this.saldo = monto;
   }
 
 }
